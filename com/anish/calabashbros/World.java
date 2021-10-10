@@ -1,13 +1,22 @@
 package com.anish.calabashbros;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.TitlePaneLayout;
+
+import com.anish.screen.*;
+import java.awt.Color;
 
 public class World {
 
-    public static final int WIDTH = 40;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 30;
+    public static final int HEIGHT = 30;
 
     private Tile<Thing>[][] tiles;
+    private int [][]maze;
 
     public World() {
+
+        MazeGenerator mazeGenerator = new MazeGenerator(30);
+        mazeGenerator.generateMaze();
+        maze = mazeGenerator.getMaze();
 
         if (tiles == null) {
             tiles = new Tile[WIDTH][HEIGHT];
@@ -16,7 +25,11 @@ public class World {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 tiles[i][j] = new Tile<>(i, j);
-                tiles[i][j].setThing(new Floor(this));
+                if (maze[i][j] == 1) {
+                    tiles[i][j].setThing(new Floor(this));
+                } else {
+                    tiles[i][j].setThing(new Floor(Color.black, this));
+                }
             }
         }
     }
@@ -27,6 +40,14 @@ public class World {
 
     public void put(Thing t, int x, int y) {
         this.tiles[x][y].setThing(t);
+    }
+
+    public int[][] getMaze() {
+        return maze;
+    }
+
+    public int getSize() {
+        return WIDTH;
     }
 
 }

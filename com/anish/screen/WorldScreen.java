@@ -7,6 +7,7 @@ import java.util.Random;
 import com.anish.calabashbros.BubbleSorter;
 import com.anish.calabashbros.Calabash;
 import com.anish.calabashbros.Colors;
+import com.anish.calabashbros.Floor;
 import com.anish.calabashbros.Monster;
 import com.anish.calabashbros.World;
 
@@ -17,27 +18,25 @@ public class WorldScreen implements Screen {
     private World world;
     private Calabash[] bros;
     private Monster[][] monsters;
+    private Monster m;
     String[] sortSteps;
 
+    public WorldScreen() {
+        world = new World();
+        m = new Monster(Color.red, 0, world);
+        world.put(m, 0, 0);
+    }
+
+    /*
     public WorldScreen() {
         world = new World();
 
         bros = new Calabash[7];
 
         int row = 8;
-        monsters = new Monster[row][row];
+        init(row);
 
-        int []randomArray = getRandomArray(row*row);
-        for (int i = 0;i < row*row;i++) {
-            int r = (Colors.colors[i] >> 16) & 0xff;
-            int g = (Colors.colors[i] >> 8) & 0xff;
-            int b = Colors.colors[i] & 0xff;
-            Monster m = new Monster(new Color(r, g, b), i, world);
-            int j = randomArray[i];
-            monsters[j/row][j%row] = m;
-            world.put(m, 2*(j/row), 2*(j%row));
-        }
-/*
+
         bros[3] = new Calabash(new Color(204, 0, 0), 1, world);
         bros[5] = new Calabash(new Color(255, 165, 0), 2, world);
         bros[1] = new Calabash(new Color(252, 233, 79), 3, world);
@@ -53,7 +52,7 @@ public class WorldScreen implements Screen {
         world.put(bros[4], 18, 10);
         world.put(bros[5], 20, 10);
         world.put(bros[6], 22, 10);
-*/
+
         //BubbleSorter<Calabash> b1 = new BubbleSorter<>();
         //b1.load(bros);
         //b1.sort();
@@ -64,6 +63,22 @@ public class WorldScreen implements Screen {
 
         //sortSteps = this.parsePlan(b1.getPlan());
         sortSteps = this.parsePlan(b2.getPlan());
+    }
+    */
+
+    private void init(int row) {
+        monsters = new Monster[row][row];
+
+        int []randomArray = getRandomArray(row*row);
+        for (int i = 0;i < row*row;i++) {
+            int r = (Colors.colors[i] >> 16) & 0xff;
+            int g = (Colors.colors[i] >> 8) & 0xff;
+            int b = Colors.colors[i] & 0xff;
+            Monster m = new Monster(new Color(r, g, b), i, world);
+            int j = randomArray[i];
+            monsters[j/row][j%row] = m;
+            world.put(m, 2*(j/row), 2*(j%row));
+        }
     }
 
     public static int[] getRandomArray(int size) {
@@ -134,13 +149,37 @@ public class WorldScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-
+        int curX = m.getX(), curY = m.getY();
+        int[][] maze = world.getMaze();
+        int size = world.getSize();
+        if (key.getKeyCode() == KeyEvent.VK_UP) {
+            if (curY > 0 && maze[curX][curY-1] == 1) {
+                world.put(new Floor(Color.cyan, world), curX, curY);
+                m.moveTo(curX, curY-1);
+            }
+        } else if (key.getKeyCode() == KeyEvent.VK_DOWN) {
+            if (curY+1 < size && maze[curX][curY+1] == 1) {
+                world.put(new Floor(Color.cyan, world), curX, curY);
+                m.moveTo(curX, curY+1);
+            }
+        } else if (key.getKeyCode() == KeyEvent.VK_LEFT) {
+            if (curX > 0 && maze[curX-1][curY] == 1) {
+                world.put(new Floor(Color.cyan, world), curX, curY);
+                m.moveTo(curX-1, curY);
+            }
+        } else if (key.getKeyCode() == KeyEvent.VK_RIGHT) {
+            if (curX+1 < size && maze[curX+1][curY] == 1) {
+                world.put(new Floor(Color.cyan, world), curX, curY);
+                m.moveTo(curX+1, curY);
+            }
+        }
+        /*
         if (i < this.sortSteps.length) {
             //this.execute(bros, sortSteps[i]);
             this.execute(monsters, sortSteps[i]);
             i++;
         }
-
+        */
         return this;
     }
 
