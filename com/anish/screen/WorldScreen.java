@@ -23,7 +23,7 @@ public class WorldScreen implements Screen {
 
     public WorldScreen() {
         world = new World();
-        m = new Monster(Color.red, 0, world);
+        m = new Monster(Color.yellow, 0, world);
         world.put(m, 0, 0);
     }
 

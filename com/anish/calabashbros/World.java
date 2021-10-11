@@ -26,9 +26,9 @@ public class World {
             for (int j = 0; j < HEIGHT; j++) {
                 tiles[i][j] = new Tile<>(i, j);
                 if (maze[i][j] == 1) {
-                    tiles[i][j].setThing(new Floor(this));
-                } else {
                     tiles[i][j].setThing(new Floor(Color.black, this));
+                } else {
+                    tiles[i][j].setThing(new Wall(this));
                 }
             }
         }
