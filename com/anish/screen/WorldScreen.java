@@ -18,12 +18,13 @@ public class WorldScreen implements Screen {
     private World world;
     private Calabash[] bros;
     private Monster[][] monsters;
+    private int curColorIndex = 0;
     private Monster m;
     String[] sortSteps;
 
     public WorldScreen() {
         world = new World();
-        m = new Monster(Color.yellow, 0, world);
+        setNewMonster();
         world.put(m, 0, 0);
     }
 
@@ -153,24 +154,48 @@ public class WorldScreen implements Screen {
         int[][] maze = world.getMaze();
         int size = world.getSize();
         if (key.getKeyCode() == KeyEvent.VK_UP) {
-            if (curY > 0 && maze[curX][curY-1] == 1) {
+            if (curY > 0) {
                 world.put(new Floor(Color.cyan, world), curX, curY);
-                m.moveTo(curX, curY-1);
+                if (maze[curX][curY-1] == 1) {                    
+                    m.moveTo(curX, curY-1);
+                } else {
+                    world.put(new Floor(Color.red, world), curX, curY-1);
+                    setNewMonster();
+                    m.moveTo(0, 0);
+                }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_DOWN) {
-            if (curY+1 < size && maze[curX][curY+1] == 1) {
+            if (curY+1 < size) {
                 world.put(new Floor(Color.cyan, world), curX, curY);
-                m.moveTo(curX, curY+1);
+                if (maze[curX][curY+1] == 1) {                    
+                    m.moveTo(curX, curY+1);
+                } else {
+                    world.put(new Floor(Color.red, world), curX, curY+1);
+                    setNewMonster();
+                    m.moveTo(0, 0);
+                }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (curX > 0 && maze[curX-1][curY] == 1) {
+            if (curX > 0) {
                 world.put(new Floor(Color.cyan, world), curX, curY);
-                m.moveTo(curX-1, curY);
+                if (maze[curX-1][curY] == 1) {
+                    m.moveTo(curX-1, curY);
+                } else {
+                    world.put(new Floor(Color.red, world), curX-1, curY);
+                    setNewMonster();
+                    m.moveTo(0, 0);
+                }
             }
         } else if (key.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if (curX+1 < size && maze[curX+1][curY] == 1) {
+            if (curX+1 < size) {
                 world.put(new Floor(Color.cyan, world), curX, curY);
-                m.moveTo(curX+1, curY);
+                if (maze[curX+1][curY] == 1) {                    
+                    m.moveTo(curX+1, curY);
+                } else {
+                    world.put(new Floor(Color.red, world), curX+1, curY);
+                    setNewMonster();
+                    m.moveTo(0, 0);
+                }
             }
         }
         /*
@@ -181,6 +206,14 @@ public class WorldScreen implements Screen {
         }
         */
         return this;
+    }
+
+    private void setNewMonster() {
+        int r = (Colors.colors[curColorIndex%Colors.colors.length] >> 16) & 0xff;
+        int g = (Colors.colors[curColorIndex%Colors.colors.length] >> 8) & 0xff;
+        int b = Colors.colors[curColorIndex%Colors.colors.length] & 0xff;
+        curColorIndex++;
+        m = new Monster(new Color(r, g, b), 0, world);
     }
 
 }

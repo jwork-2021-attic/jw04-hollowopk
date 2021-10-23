@@ -6,15 +6,15 @@ import java.awt.Color;
 
 public class World {
 
-    public static final int WIDTH = 30;
-    public static final int HEIGHT = 30;
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = WIDTH;
 
     private Tile<Thing>[][] tiles;
     private int [][]maze;
 
     public World() {
 
-        MazeGenerator mazeGenerator = new MazeGenerator(30);
+        MazeGenerator mazeGenerator = new MazeGenerator(WIDTH);
         mazeGenerator.generateMaze();
         maze = mazeGenerator.getMaze();
 

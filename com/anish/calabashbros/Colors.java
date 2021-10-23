@@ -2,8 +2,7 @@ package com.anish.calabashbros;
 
 public class Colors {
     public static int[] colors = {
-        0x000000
-        ,0x800000
+        0x800000
         ,0x008000
         ,0x808000
         ,0x000080
